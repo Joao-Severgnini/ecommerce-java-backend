@@ -94,7 +94,6 @@ mvn exec:java
 
 ---
 
----
 ## 📚 Observações
 
 Este projeto não utiliza frameworks como Spring para reforçar o entendimento
