@@ -1,4 +1,9 @@
 package com.joaosevergnini.ecommerce.domain.model;
 
-public class RequestStatus {
+public enum RequestStatus {
+    CREATED,
+    PAID,
+    SHIPPED,
+    DELIVERED,
+    CANCELED
 }
