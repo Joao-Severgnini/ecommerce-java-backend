@@ -80,8 +80,7 @@ public class Request {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (discount != null){
-            BigDecimal discounted = Objects.requireNonNull(discount.apply(total), "discount.apply must not return null");
-            total = discounted;
+            total = Objects.requireNonNull(discount.apply(total), "discount.apply must not return null");
         }
 
         return total.setScale(2, RoundingMode.HALF_UP);

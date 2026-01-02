@@ -38,7 +38,7 @@ public class Product {
         this.stock = stock;
     }
 
-    public BigDecimal getPrice(){ return Objects.requireNonNull(price, "product.price must not be null"); }
+    public BigDecimal getPrice(){ return price; }
     public Long getId(){ return id; }
     public String getName() { return name; }
     public int getStock() { return stock; }
