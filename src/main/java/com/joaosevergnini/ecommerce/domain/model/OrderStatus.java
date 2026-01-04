@@ -1,6 +1,6 @@
 package com.joaosevergnini.ecommerce.domain.model;
 
-public enum RequestStatus {
+public enum OrderStatus {
     CREATED,
     PAID,
     SHIPPED,

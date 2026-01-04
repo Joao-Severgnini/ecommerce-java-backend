@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-public class ItemOrdered {
+public class OrderItem {
     private final Long id;
     private final Product product;
     private int quantity;
 
     // Constructor without id for new items
-    public ItemOrdered(Product product, int quantity) {
+    public OrderItem(Product product, int quantity) {
         this.id = null;
         this.product = Objects.requireNonNull(product, "product");
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
@@ -18,7 +18,7 @@ public class ItemOrdered {
     }
 
     // Constructor with id for existing items in DB
-    public ItemOrdered(Long id, Product product, int quantity) {
+    public OrderItem(Long id, Product product, int quantity) {
         this.id = id;
         this.product = Objects.requireNonNull(product, "product");
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
