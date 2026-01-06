@@ -6,27 +6,39 @@ import java.util.Objects;
 
 public class OrderItem {
     private final Long id;
-    private final Product product;
+    private final Long productId;
+    private final BigDecimal price;
     private int quantity;
 
     // Constructor without id for new items
-    public OrderItem(Product product, int quantity) {
+    public OrderItem(Long productId, BigDecimal price, int quantity) {
         this.id = null;
-        this.product = Objects.requireNonNull(product, "product");
+
+        if (productId == null) throw new IllegalArgumentException("productId must not be null");
+        if (price == null) throw new IllegalArgumentException("price must not be null");
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
+
+        this.productId = productId;
+        this.price = price.setScale(2, RoundingMode.HALF_UP);
         this.quantity = quantity;
     }
 
     // Constructor with id for existing items in DB
-    public OrderItem(Long id, Product product, int quantity) {
-        this.id = id;
-        this.product = Objects.requireNonNull(product, "product");
+    public OrderItem(Long id, Long productId, BigDecimal price, int quantity) {
+        if (id == null) throw new IllegalArgumentException("id must not be null");
+        if (productId == null) throw new IllegalArgumentException("productId must not be null");
+        if (price == null) throw new IllegalArgumentException("price must not be null");
         if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
+
+        this.id = id;
+        this.productId = productId;
+        this.price = price.setScale(2, RoundingMode.HALF_UP);
         this.quantity = quantity;
     }
 
     public Long getId() { return id; }
-    public Product getProduct() { return product; }
+    public Long getProductId() { return productId; }
+    public BigDecimal getPrice() { return price; }
     public int getQuantity() { return quantity; }
 
     public void changeQuantity(int newQuantity){
@@ -36,8 +48,6 @@ public class OrderItem {
 
     // Retorna o preço total deste item (unitPrice * quantity)
     public BigDecimal getTotalPrice(){
-        BigDecimal unitPrice = product.getPrice();
-        return unitPrice.multiply(BigDecimal.valueOf(quantity))
-                .setScale(2, RoundingMode.HALF_UP);
+        return price.multiply(BigDecimal.valueOf(quantity)).setScale(2, RoundingMode.HALF_UP);
     }
 }
