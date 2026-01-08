@@ -3,12 +3,12 @@ package com.joaosevergnini.ecommerce.infrastructure.pesistence.repository;
 import com.joaosevergnini.ecommerce.domain.model.Customer;
 import com.joaosevergnini.ecommerce.infrastructure.pesistence.connection.DatabaseConnection;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomerRepository {
 
@@ -70,7 +70,7 @@ public class CustomerRepository {
         }
     }
 
-    public Customer findById(Long id){
+    public Optional<Customer> findById(Long id){
         String sql = """
             SELECT id, name, email
             FROM customers
@@ -85,19 +85,20 @@ public class CustomerRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()){
-                return new Customer(
+                Customer customer = new Customer(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
+                return Optional.of(customer);
             }
-            throw new RuntimeException("No customer found with ID: " + id);
+            return Optional.empty();
         } catch (SQLException e){
             throw new RuntimeException("Error finding customer by ID", e);
         }
     }
 
-    public Customer findByEmail(String email){
+    public Optional<Customer> findByEmail(String email){
         String sql = """
             SELECT id, name, email
             FROM customers
@@ -112,13 +113,14 @@ public class CustomerRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()){
-                return new Customer(
+                Customer customer = new Customer(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("email")
                 );
+                return Optional.of(customer);
             }
-            throw new RuntimeException("No customer found with email: " + email);
+            return Optional.empty();
         } catch (SQLException e){
             throw new RuntimeException("Error finding customer by email", e);
         }
@@ -161,7 +163,6 @@ public class CustomerRepository {
             stmt.setLong(1, id);
 
             int rowsAffected = stmt.executeUpdate();
-
             return rowsAffected > 0;
 
         } catch (SQLException e){

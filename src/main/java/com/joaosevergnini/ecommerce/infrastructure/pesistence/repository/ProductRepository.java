@@ -6,6 +6,7 @@ import com.joaosevergnini.ecommerce.infrastructure.pesistence.connection.Databas
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductRepository {
 
@@ -72,7 +73,7 @@ public class ProductRepository {
         }
     }
 
-    public Product findbyId(Long id){
+    public Optional<Product> findbyId(Long id){
         String sql = """
             SELECT id, name, price, stock
             FROM products
@@ -87,16 +88,15 @@ public class ProductRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new Product(
+                Product product = new Product(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getBigDecimal("price"),
                         rs.getInt("stock")
                 );
+                return Optional.of(product);
             }
-
-            return null;
-
+            return Optional.empty();
         } catch (SQLException e) {
             throw new RuntimeException("Error finding product by ID", e);
         }
@@ -140,7 +140,6 @@ public class ProductRepository {
             stmt.setLong(1, id);
 
             int rowsAffected = stmt.executeUpdate();
-
             return rowsAffected > 0;
 
         } catch (SQLException e) {
