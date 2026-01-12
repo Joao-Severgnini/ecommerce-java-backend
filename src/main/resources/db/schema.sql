@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS orders (
     discount_type VARCHAR(30),
     discount_value DECIMAL(10, 2),
     CONSTRAINT fk_order_customer
-        FOREIGN KEY (customer_id),
+        FOREIGN KEY (customer_id)
         REFERENCES customers(id)
 );
 
@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
     CONSTRAINT fk_order_item_order
-        FOREIGN KEY (order_id) REFERENCES orders(id),
+        FOREIGN KEY (order_id) REFERENCES orders(id)
         FOREIGN KEY (product_id) REFERENCES products(id)
 );
