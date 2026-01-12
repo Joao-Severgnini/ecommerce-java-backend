@@ -145,4 +145,8 @@ public class Order {
     public List<OrderItem> getItems() {
         return List.copyOf(items);
     }
+
+    public Discount getDiscount() {
+        return discount;
+    }
 }

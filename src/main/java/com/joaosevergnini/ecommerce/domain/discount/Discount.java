@@ -9,4 +9,8 @@ import java.math.BigDecimal;
  **/
 public interface Discount {
     BigDecimal apply(BigDecimal value);
+
+    String getType();
+
+    BigDecimal getValue();
 }

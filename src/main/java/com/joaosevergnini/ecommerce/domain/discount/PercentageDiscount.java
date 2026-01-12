@@ -19,4 +19,12 @@ public class PercentageDiscount implements Discount{
         Objects.requireNonNull(originalValue, "originalValue");
         return originalValue.subtract(originalValue.multiply(percentage)).setScale(2, RoundingMode.HALF_UP);
     }
+
+    public String getType() {
+        return "PERCENTAGE";
+    }
+
+    public BigDecimal getValue() {
+        return percentage;
+    }
 }

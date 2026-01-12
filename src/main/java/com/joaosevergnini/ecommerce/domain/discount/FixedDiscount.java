@@ -18,4 +18,12 @@ public class FixedDiscount implements Discount{
         Objects.requireNonNull(originalValue, "originalValue");
         return originalValue.subtract(value).setScale(2, RoundingMode.HALF_UP);
     }
+    
+    public String getType() {
+        return "FIXED";
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
 }
