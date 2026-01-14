@@ -42,4 +42,13 @@ public class Product {
     public Long getId(){ return id; }
     public String getName() { return name; }
     public int getStock() { return stock; }
+    public void decreaseStock(int quantity){
+        if (quantity <= 0){
+            throw new IllegalArgumentException("Quantity to decrease must be positive");
+        }
+        if (this.stock < quantity){
+            throw new IllegalStateException("Insufficient stock to decrease by " + quantity);
+        }
+        this.stock -= quantity;
+    }
 }

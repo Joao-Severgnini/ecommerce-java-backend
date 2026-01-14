@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class OrderRepository {
@@ -105,6 +107,98 @@ public class OrderRepository {
             return Optional.empty();
         }catch (SQLException e){
             throw new RuntimeException("Error finding order by ID", e);
+        }
+    }
+
+    public List<Order> findByCustomerId(Long customerId) {
+        String sql = """
+            SELECT id, customer_id, status, discount_type, discount_value
+            FROM orders
+            WHERE customer_id = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, customerId);
+
+            ResultSet rs = stmt.executeQuery();
+            List<Order> orders = new ArrayList<>();
+
+            while (rs.next()) {
+                Long orderId = rs.getLong("id");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status"));
+
+                Discount discount = null;
+                String discountType = rs.getString("discount_type");
+                BigDecimal discountValue = rs.getBigDecimal("discount_value");
+
+                if (discountType != null && discountValue != null){
+                    if (discountType.equals("FIXED")) {
+                        discount = new FixedDiscount(discountValue);
+                    } else if (discountType.equals("PERCENTAGE")) {
+                        discount = new PercentageDiscount(discountValue);
+                    }
+                }
+
+                Order order = new Order(
+                    orderId,
+                    customerId,
+                    status,
+                    discount
+                );
+
+                orders.add(order);
+            }
+
+            return orders;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding orders by customer ID", e);
+        }
+    }
+
+    public List<Order> findAll() {
+        String sql = """
+            SELECT id, customer_id, status, discount_type, discount_value
+            FROM orders
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            List<Order> orders = new ArrayList<>();
+
+            while (rs.next()) {
+                Long orderId = rs.getLong("id");
+                Long customerId = rs.getLong("customer_id");
+                OrderStatus status = OrderStatus.valueOf(rs.getString("status"));
+
+                Discount discount = null;
+                String discountType = rs.getString("discount_type");
+                BigDecimal discountValue = rs.getBigDecimal("discount_value");
+
+                if (discountType != null && discountValue != null){
+                    if (discountType.equals("FIXED")) {
+                        discount = new FixedDiscount(discountValue);
+                    } else if (discountType.equals("PERCENTAGE")) {
+                        discount = new PercentageDiscount(discountValue);
+                    }
+                }
+
+                Order order = new Order(
+                    orderId,
+                    customerId,
+                    status,
+                    discount
+                );
+
+                orders.add(order);
+            }
+
+            return orders;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding all orders", e);
         }
     }
 }

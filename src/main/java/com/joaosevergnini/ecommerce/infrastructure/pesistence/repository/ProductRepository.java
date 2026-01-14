@@ -48,7 +48,7 @@ public class ProductRepository {
 
     }
 
-    public Product update(Product product) {
+    public void update(Product product) {
         String sql = """
             UPDATE products
             SET name = ?, price = ?, stock = ?
@@ -67,13 +67,12 @@ public class ProductRepository {
             if (rowsAffected == 0) {
                 throw new RuntimeException("No product found with ID: " + product.getId());
             }
-            return product;
         } catch (SQLException e) {
             throw new RuntimeException("Error updating product", e);
         }
     }
 
-    public Optional<Product> findbyId(Long id){
+    public Optional<Product> findById(Long id){
         String sql = """
             SELECT id, name, price, stock
             FROM products
