@@ -12,14 +12,13 @@ import java.util.Optional;
 
 public class CustomerRepository {
 
-    public Customer save(Customer customer){
+    public Customer save(Connection conn, Customer customer){
         String sql = """
             INSERT INTO customers (name, email)
             VALUES (?, ?)
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
+        try (PreparedStatement stmt = conn.prepareStatement(
                      sql,
                      PreparedStatement.RETURN_GENERATED_KEYS
              )) {
@@ -46,15 +45,14 @@ public class CustomerRepository {
         }
     }
 
-    public Customer update(Customer customer){
+    public Customer update(Connection conn, Customer customer){
         String sql = """
             UPDATE customers
             SET name = ?, email = ?
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, customer.getName());
             stmt.setString(2, customer.getEmail());
@@ -70,15 +68,14 @@ public class CustomerRepository {
         }
     }
 
-    public Optional<Customer> findById(Long id){
+    public Optional<Customer> findById(Connection conn, Long id){
         String sql = """
             SELECT id, name, email
             FROM customers
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 
@@ -98,15 +95,14 @@ public class CustomerRepository {
         }
     }
 
-    public Optional<Customer> findByEmail(String email){
+    public Optional<Customer> findByEmail(Connection conn, String email){
         String sql = """
             SELECT id, name, email
             FROM customers
             WHERE email = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
 
@@ -126,14 +122,13 @@ public class CustomerRepository {
         }
     }
 
-    public List<Customer> findAll(){
+    public List<Customer> findAll(Connection conn){
         String sql = """
             SELECT id, name, email
             FROM customers
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
             List<Customer> customers = new java.util.ArrayList<>();
@@ -151,14 +146,13 @@ public class CustomerRepository {
         }
     }
 
-    public boolean deleteById(Long id){
+    public boolean deleteById(Connection conn, Long id){
         String sql = """
             DELETE FROM customers
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 

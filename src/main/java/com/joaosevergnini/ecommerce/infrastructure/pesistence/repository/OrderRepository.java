@@ -18,14 +18,13 @@ import java.util.Optional;
 
 public class OrderRepository {
 
-    public Order save(Order order){
+    public Order save(Connection conn, Order order){
         String sql = """
             INSERT INTO orders (customer_id, status, discount_type , discount_value)
             VALUES (?, ?, ?, ?)
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
+        try (PreparedStatement stmt = conn.prepareStatement(
                      sql,
                         PreparedStatement.RETURN_GENERATED_KEYS
              )) {
@@ -63,15 +62,14 @@ public class OrderRepository {
         }
     }
 
-    public Optional<Order> finbyId(Long id) {
+    public Optional<Order> finbyId(Connection conn, Long id) {
         String sql = """
             SELECT id, customer_id, status, discount_type, discount_value
             FROM orders
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 
@@ -110,15 +108,14 @@ public class OrderRepository {
         }
     }
 
-    public List<Order> findByCustomerId(Long customerId) {
+    public List<Order> findByCustomerId(Connection conn, Long customerId) {
         String sql = """
             SELECT id, customer_id, status, discount_type, discount_value
             FROM orders
             WHERE customer_id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, customerId);
 
@@ -157,14 +154,13 @@ public class OrderRepository {
         }
     }
 
-    public List<Order> findAll() {
+    public List<Order> findAll(Connection conn) {
         String sql = """
             SELECT id, customer_id, status, discount_type, discount_value
             FROM orders
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
             List<Order> orders = new ArrayList<>();

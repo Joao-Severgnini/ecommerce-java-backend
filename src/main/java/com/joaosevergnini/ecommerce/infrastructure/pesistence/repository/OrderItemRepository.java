@@ -12,14 +12,13 @@ import java.util.Optional;
 
 public class OrderItemRepository {
 
-    public OrderItem save(Long orderId, OrderItem item){
+    public OrderItem save(Connection conn, Long orderId, OrderItem item){
         String sql = """
             INSERT INTO order_items (order_id, product_id, price, quantity)
             VALUES (?, ?, ?, ?)
         """;
 
-       try (Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(
+       try (PreparedStatement stmt = conn.prepareStatement(
                     sql,
                     PreparedStatement.RETURN_GENERATED_KEYS
             )) {
@@ -49,15 +48,14 @@ public class OrderItemRepository {
        }
     }
 
-    public Optional<OrderItem> findById(Long id){
+    public Optional<OrderItem> findById(Connection conn, Long id){
         String sql = """
             SELECT id, product_id, price, quantity
             FROM order_items
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 
@@ -78,15 +76,14 @@ public class OrderItemRepository {
         }
     }
 
-    public List<OrderItem> findByOrderId(Long orderId){
+    public List<OrderItem> findByOrderId(Connection conn, Long orderId){
         String sql = """
             SELECT id, product_id, price, quantity
             FROM order_items
             WHERE order_id = ?
         """;
 
-        try(Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)){
+        try(PreparedStatement stmt = conn.prepareStatement(sql)){
 
             stmt.setLong(1, orderId);
             ResultSet rs = stmt.executeQuery();

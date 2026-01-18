@@ -10,14 +10,13 @@ import java.util.Optional;
 
 public class ProductRepository {
 
-    public Product save(Product product) {
+    public Product save(Connection conn, Product product) {
         String sql = """
             INSERT INTO products (name, price, stock)
             VALUES (?, ?, ?)
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
+        try (PreparedStatement stmt = conn.prepareStatement(
                      sql,
                      Statement.RETURN_GENERATED_KEYS
         )) {
@@ -48,15 +47,14 @@ public class ProductRepository {
 
     }
 
-    public void update(Product product) {
+    public void update(Connection conn, Product product) {
         String sql = """
             UPDATE products
             SET name = ?, price = ?, stock = ?
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, product.getName());
             stmt.setBigDecimal(2, product.getPrice());
@@ -72,15 +70,14 @@ public class ProductRepository {
         }
     }
 
-    public Optional<Product> findById(Long id){
+    public Optional<Product> findById(Connection conn, Long id){
         String sql = """
             SELECT id, name, price, stock
             FROM products
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 
@@ -101,14 +98,13 @@ public class ProductRepository {
         }
     }
 
-    public List<Product> findAll(){
+    public List<Product> findAll(Connection conn){
         String sql = """
             SELECT id, name, price, stock
             FROM products
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             ResultSet rs = stmt.executeQuery();
             List<Product> products = new ArrayList<>();
@@ -127,14 +123,13 @@ public class ProductRepository {
         }
     }
 
-    public boolean deleteById(Long id){
+    public boolean deleteById(Connection conn, Long id){
         String sql = """
             DELETE FROM products
             WHERE id = ?
         """;
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setLong(1, id);
 
