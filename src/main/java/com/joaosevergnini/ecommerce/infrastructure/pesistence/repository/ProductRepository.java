@@ -1,7 +1,6 @@
 package com.joaosevergnini.ecommerce.infrastructure.pesistence.repository;
 
 import com.joaosevergnini.ecommerce.domain.model.Product;
-import com.joaosevergnini.ecommerce.infrastructure.pesistence.connection.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;

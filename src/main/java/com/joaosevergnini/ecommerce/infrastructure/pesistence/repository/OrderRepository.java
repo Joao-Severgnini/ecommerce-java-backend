@@ -5,7 +5,6 @@ import com.joaosevergnini.ecommerce.domain.discount.FixedDiscount;
 import com.joaosevergnini.ecommerce.domain.discount.PercentageDiscount;
 import com.joaosevergnini.ecommerce.domain.model.Order;
 import com.joaosevergnini.ecommerce.domain.model.OrderStatus;
-import com.joaosevergnini.ecommerce.infrastructure.pesistence.connection.DatabaseConnection;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
