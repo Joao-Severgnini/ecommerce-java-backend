@@ -25,10 +25,8 @@ public class OrderService {
 
     public Order CreateOrder(Order order){
 
-        customerRepository.findById(order.getCustomerId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Customer not found")
-                        );
+            customerRepository.findById(conn, order.getCustomerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
         Order savedOrder = orderRepository.save(order);
 
