@@ -97,7 +97,7 @@ public class OrderService {
         }
     }
 
-    public List<Order> findByCustomerId(Long customerId) {
+    public List<Order> findOrdersByCustomerId(Long customerId) {
         try (Connection conn = DatabaseConnection.getConnection()) {
 
             List<Order> orders = orderRepository.findByCustomerId(conn, customerId);
