@@ -61,7 +61,29 @@ public class OrderRepository {
         }
     }
 
-    public Optional<Order> finbyId(Connection conn, Long id) {
+    public void updateStatus(Connection conn, Long orderId, OrderStatus status){
+        String sql = """
+            UPDATE orders
+            SET status = ?
+            WHERE id = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, status.name());
+            stmt.setLong(2, orderId);
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new RuntimeException("No order found with ID: " + orderId);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating order status", e);
+        }
+    }
+
+    public Optional<Order> finById(Connection conn, Long id) {
         String sql = """
             SELECT id, customer_id, status, discount_type, discount_value
             FROM orders

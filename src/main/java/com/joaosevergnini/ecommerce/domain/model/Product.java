@@ -51,4 +51,10 @@ public class Product {
         }
         this.stock -= quantity;
     }
+    public void increaseStock(int quantity){
+        if (quantity <= 0){
+            throw new IllegalArgumentException("Quantity to increase must be positive");
+        }
+        this.stock += quantity;
+    }
 }

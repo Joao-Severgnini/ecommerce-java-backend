@@ -2,6 +2,7 @@ package com.joaosevergnini.ecommerce.application.service;
 
 import com.joaosevergnini.ecommerce.domain.model.Order;
 import com.joaosevergnini.ecommerce.domain.model.OrderItem;
+import com.joaosevergnini.ecommerce.domain.model.OrderStatus;
 import com.joaosevergnini.ecommerce.domain.model.Product;
 import com.joaosevergnini.ecommerce.infrastructure.pesistence.connection.DatabaseConnection;
 import com.joaosevergnini.ecommerce.infrastructure.pesistence.repository.*;
@@ -81,7 +82,7 @@ public class OrderService {
     public Optional<Order> findOrderById(Long orderId) {
         try (Connection conn = DatabaseConnection.getConnection()) {
 
-            Optional<Order> orderOpt = orderRepository.finbyId(conn, orderId);
+            Optional<Order> orderOpt = orderRepository.finById(conn, orderId);
             if (orderOpt.isEmpty()) {
                 return  Optional.empty();
             }
@@ -114,6 +115,48 @@ public class OrderService {
         }
     }
 
+    public void cancelOrder(Long orderId) {
+        Connection conn = null;
 
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            Order order = orderRepository.finById(conn, orderId)
+                    .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+            if (order.getStatus() != OrderStatus.CREATED) {
+                throw new IllegalStateException("Only CREATED orders can be canceled.");
+            }
+
+            List <OrderItem> items = orderItemRepository.findByOrderId(conn, orderId);
+
+            for (OrderItem item : items) {
+                Product product = productRepository.findById(conn, item.getProductId())
+                        .orElseThrow(() -> new IllegalArgumentException("Product not found: " + item.getProductId()));
+
+                product.increaseStock(item.getQuantity());
+                productRepository.update(conn, product);
+        }
+
+            order.setStatus(OrderStatus.CANCELED);
+            orderRepository.updateStatus(conn, orderId, OrderStatus.CANCELED);
+
+            conn.commit();
+    } catch (Exception e){
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Rollback failed", ex);
+            }
+            throw new RuntimeException("Error canceling order", e);
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                throw new RuntimeException("Error closing connection", e);
+            }
+        }
+    }
 }
 

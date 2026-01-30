@@ -56,6 +56,11 @@ public class Order {
         items.add(item);
     }
 
+    public void setStatus(OrderStatus status){
+        Objects.requireNonNull(status, "status");
+        this.status = status;
+    }
+
     public void applyDiscount(Discount discount){
         Objects.requireNonNull(discount, "discount");
         if (status != OrderStatus.CREATED){
