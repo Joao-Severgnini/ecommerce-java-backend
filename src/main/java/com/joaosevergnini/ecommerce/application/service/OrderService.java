@@ -158,5 +158,55 @@ public class OrderService {
             }
         }
     }
+    public void payorder(Order order) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            Order existingOrder = orderRepository.finById(conn, order.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+            if (existingOrder.getStatus() != OrderStatus.CREATED) {
+                throw new IllegalStateException("Only CREATED orders can be paid.");
+            }
+
+            orderRepository.updateStatus(conn, order.getId(), OrderStatus.PAID);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error paying order", e);
+        }
+    }
+
+    public void shipOrder(Order order) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            Order existingOrder = orderRepository.finById(conn, order.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+            if (existingOrder.getStatus() != OrderStatus.PAID) {
+                throw new IllegalStateException("Only PAID orders can be shipped.");
+            }
+
+            orderRepository.updateStatus(conn, order.getId(), OrderStatus.SHIPPED);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error shipping order", e);
+        }
+    }
+
+    public void deliverOrder(Order order) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+
+            Order existingOrder = orderRepository.finById(conn, order.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+
+            if (existingOrder.getStatus() != OrderStatus.SHIPPED) {
+                throw new IllegalStateException("Only SHIPPED orders can be delivered.");
+            }
+
+            orderRepository.updateStatus(conn, order.getId(), OrderStatus.DELIVERED);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error delivering order", e);
+        }
+    }
 }
 
