@@ -115,6 +115,20 @@ public class OrderService {
         }
     }
 
+    public List<Order> findAllOrders() {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            List<Order> orders = orderRepository.findAll(conn);
+
+            for (Order order : orders) {
+                orderItemRepository.findByOrderId(conn, order.getId())
+                        .forEach(order::addItem);
+            }
+            return orders;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding all orders", e);
+        }
+    }
+
     public void cancelOrder(Long orderId) {
         Connection conn = null;
 
