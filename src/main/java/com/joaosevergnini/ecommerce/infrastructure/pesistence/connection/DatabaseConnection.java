@@ -14,7 +14,11 @@ public class DatabaseConnection {
         // Private constructor to prevent instantiation
     }
 
-    public static Connection getConnection() throws SQLException{
+    public static Connection getConnection() {
+        try {
             return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error connecting to the database", e);
+        }
     }
 }
