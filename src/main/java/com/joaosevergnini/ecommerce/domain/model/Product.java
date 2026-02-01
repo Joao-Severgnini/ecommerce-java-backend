@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Product {
     private final Long id;
     private final String name;
-    private final BigDecimal price;
+    private BigDecimal price;
     int stock;
 
     // Constructor without id for new products
@@ -39,6 +39,11 @@ public class Product {
     }
 
     public BigDecimal getPrice(){ return price; }
+    public void setPrice(BigDecimal price){
+        Objects.requireNonNull(price, "price");
+        if (price.signum() < 0) throw new IllegalArgumentException("price must be non-negative");
+        this.price = price.setScale(2, RoundingMode.HALF_UP);
+    }
     public Long getId(){ return id; }
     public String getName() { return name; }
     public int getStock() { return stock; }
