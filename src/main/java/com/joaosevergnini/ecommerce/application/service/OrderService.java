@@ -30,19 +30,23 @@ public class OrderService {
         this.customerRepository = customerRepository;
     }
 
-    public Order createOrder(Order order){
+    public Order createOrder(Long customerId, List<OrderItem> items) {
         Connection conn = null;
 
         try {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
-            customerRepository.findById(conn, order.getCustomerId())
+            customerRepository.findById(conn, customerId)
                     .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+
+            Order order = new Order(
+                    customerId
+            );
 
             Order savedOrder = orderRepository.save(conn, order);
 
-            for (OrderItem item : order.getItems()) {
+            for (OrderItem item : items) {
                 Product product = productRepository.findById(conn, item.getProductId())
                         .orElseThrow(() -> new IllegalArgumentException("Product not found: " + item.getProductId()));
 
