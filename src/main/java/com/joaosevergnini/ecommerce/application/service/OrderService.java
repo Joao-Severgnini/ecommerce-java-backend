@@ -176,7 +176,7 @@ public class OrderService {
             }
         }
     }
-    public void payorder(Order order) {
+    public void payOrder(Order order) {
         try (Connection conn = DatabaseConnection.getConnection()) {
 
             Order existingOrder = orderRepository.finById(conn, order.getId())

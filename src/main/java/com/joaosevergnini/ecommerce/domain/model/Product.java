@@ -38,6 +38,7 @@ public class Product {
         this.stock = stock;
     }
 
+    // Price is validated in constructors and in setPrice(), so the getter does not need to re-check.
     public BigDecimal getPrice(){ return price; }
     public void setPrice(BigDecimal price){
         Objects.requireNonNull(price, "price");
@@ -61,5 +62,10 @@ public class Product {
             throw new IllegalArgumentException("Quantity to increase must be positive");
         }
         this.stock += quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Product: " + name + " id: " + id + " price: " + price + " stock: " + stock;
     }
 }

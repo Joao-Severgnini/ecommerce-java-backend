@@ -18,7 +18,7 @@ public class Order {
 
     // Constructor without id for new requests
     public Order(Long customerId) {
-        Objects.requireNonNull(customerId, "customerId");
+        Objects.requireNonNull(customerId, "customerId must not be null");
         this.id = null;
         this.customerId = customerId;
         this.status = OrderStatus.CREATED;
@@ -27,8 +27,8 @@ public class Order {
 
     // Constructor with id for existing requests in DB
     public Order(Long id, Long customerId, OrderStatus status, Discount discount) {
-        Objects.requireNonNull(customerId, "customerId");
-        Objects.requireNonNull(status, "status");
+        Objects.requireNonNull(customerId, "customerId must not be null");
+        Objects.requireNonNull(status, "status must not be null");
         this.id = id;
         this.customerId = customerId;
         this.status = status;

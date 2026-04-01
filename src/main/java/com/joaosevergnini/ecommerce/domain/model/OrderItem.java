@@ -14,9 +14,9 @@ public class OrderItem {
     public OrderItem(Long productId, BigDecimal price, int quantity) {
         this.id = null;
 
-        if (productId == null) throw new IllegalArgumentException("productId must not be null");
-        if (price == null) throw new IllegalArgumentException("price must not be null");
-        if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
+        Objects.requireNonNull(productId, "productId must not be null");
+        Objects.requireNonNull(price, "price must not be null");
+        if (quantity <= 0) throw new IllegalArgumentException("quantity must be positive");
 
         this.productId = productId;
         this.price = price.setScale(2, RoundingMode.HALF_UP);
@@ -25,10 +25,10 @@ public class OrderItem {
 
     // Constructor with id for existing items in DB
     public OrderItem(Long id, Long productId, BigDecimal price, int quantity) {
-        if (id == null) throw new IllegalArgumentException("id must not be null");
-        if (productId == null) throw new IllegalArgumentException("productId must not be null");
-        if (price == null) throw new IllegalArgumentException("price must not be null");
-        if (quantity <= 0) throw new IllegalArgumentException("Quantity must be positive");
+        Objects.requireNonNull(id, "id must not be null");
+        Objects.requireNonNull(productId, "productId must not be null");
+        Objects.requireNonNull(price, "price must not be null");
+        if (quantity <= 0) throw new IllegalArgumentException("quantity must be positive");
 
         this.id = id;
         this.productId = productId;

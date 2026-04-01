@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     product_id BIGINT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
-    CONSTRAINT fk_order_item_order
-        FOREIGN KEY (order_id) REFERENCES orders(id)
-        FOREIGN KEY (product_id) REFERENCES products(id)
+    CONSTRAINT fk_order_item_order FOREIGN KEY (order_id) REFERENCES orders(id),
+    CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
